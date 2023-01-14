@@ -6,6 +6,13 @@ From what I gather, popular automation tools like IFTTT or Zapier don't have Goo
 This will take some time as it's not urgent and I'm learning about a number of web things as I go (e.g. authenticating with Google via oauth2 in an application).
 
 # Thoughts and brainstorms so far
+## 2023-01-14
+Let's see how far we get with the example from that rust oauth2 crate for a desktop application. 
+
+Actually, that worked really well. Just needed to figure out a few pieces about setting things up properly with the gitpod workspace. There's a gitpod local companion that allows 
+port forwarding from localhost; that way, when I open the authorization URL and it wants to send the token to my actual localhost, that thing gets forwarded to the 
+server listening on the gitpod site. That's fantastic! So. It looks like authorization works. Next, I'll have to figure out how to then actually make requests with that token.
+
 ## 2023-01-13
 Let's do a bit of initial spiking, getting some familiarity with the parts I need to deal with. I'll need to be able to authenticate with Google Photos. So the first thing I'll try and manage is to just get a list of albums from a 
 Google Photos account, as a simple command line app in rust. First I'l do the Google Photo API stuff. Clicking around their documentation, I'll need to make a project and enable the Google Photo API for it.
