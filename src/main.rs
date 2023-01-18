@@ -9,6 +9,38 @@ use std::io::{BufRead, BufReader, Write};
 use std::net::TcpListener;
 use url::Url;
 use reqwest::blocking::Client;
+use serde::{Deserialize, Deserializer};
+
+
+#[derive(Deserialize)]
+struct Albums {
+    albums: Vec<Album>,
+    next_page_token: Option<String>
+}
+
+#[derive(Default, Deserialize)]
+#[serde(default)]
+struct Album {
+    id: String,
+    title: String,
+    productUrl: String,
+    coverPhotoBaseUrl: String,
+    coverPhotoMediaItemId: String,
+    isWriteable: Option<String>,
+    #[serde(default, deserialize_with= "from_str")]
+    mediaItemsCount: usize
+}
+
+use std::fmt::Display;
+use std::str::FromStr;
+fn from_str<'de, T, D>(deserializer: D) -> Result<T, D::Error>
+    where T: FromStr,
+          T::Err: Display,
+          D: Deserializer<'de>
+{
+    let s = String::deserialize(deserializer)?;
+    T::from_str(&s).map_err(serde::de::Error::custom)
+}
 
 fn main() {
     println!("Hello, world!");
@@ -113,7 +145,12 @@ fn main() {
             .bearer_auth(token.secret()).send().unwrap();
             
             println!("Calling the http get requests returned: {:?}", res);
-            println!("And also: {:?}", res.text());
+            
+            let albums: Albums = res.json().expect("Failed to parse response into Albums struct");
+
+            for album in &albums.albums {
+                println!("{}", album.title);
+            }
             break;
         }
     }
