@@ -6,6 +6,11 @@ From what I gather, popular automation tools like IFTTT or Zapier don't have Goo
 This will take some time as it's not urgent and I'm learning about a number of web things as I go (e.g. authenticating with Google via oauth2 in an application).
 
 # Thoughts and brainstorms so far
+## 2023-01-17
+Great success. Figured out how to take the token and use it to build a proper request against the 
+endpoint _and_ how to parse that stuff into a struct. The current version, when run, prints a list 
+of my album titles. Yay.
+
 ## 2023-01-14
 Let's see how far we get with the example from that rust oauth2 crate for a desktop application. 
 
