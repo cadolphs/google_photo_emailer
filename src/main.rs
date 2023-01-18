@@ -8,6 +8,7 @@ use std::env;
 use std::io::{BufRead, BufReader, Write};
 use std::net::TcpListener;
 use url::Url;
+use reqwest::blocking::Client;
 
 fn main() {
     println!("Hello, world!");
@@ -104,13 +105,17 @@ fn main() {
             let token_response = client
                 .exchange_code(code)
                 .set_pkce_verifier(pkce_code_verifier)
-                .request(http_client);
+                .request(http_client).expect("Something went wrong in fetching the access token");
 
-            println!(
-                "Google returned the following token:\n{:?}\n",
-                token_response
-            );
+            let token = token_response.access_token();
+            let client = Client::new();
+            let res = client.get("https://photoslibrary.googleapis.com/v1/albums")
+            .bearer_auth(token.secret()).send().unwrap();
+            
+            println!("Calling the http get requests returned: {:?}", res);
+            println!("And also: {:?}", res.text());
             break;
         }
     }
+
 }
