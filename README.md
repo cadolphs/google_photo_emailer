@@ -12,6 +12,8 @@ right is a pain.
 
 First, let's move all that log-in token stuff into its own module and worry about refactoring later. :)
 
+Next, it would be nice to use that whole refresh-token stuff so I don't have to constantly get a new access token. Then I could even use that client for certain narrow infrastructure tests!
+
 ## 2023-01-17
 Great success. Figured out how to take the token and use it to build a proper request against the 
 endpoint _and_ how to parse that stuff into a struct. The current version, when run, prints a list 
