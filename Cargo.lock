@@ -313,6 +313,7 @@ dependencies = [
  "oauth2",
  "reqwest",
  "serde",
+ "thiserror",
  "url",
 ]
 
