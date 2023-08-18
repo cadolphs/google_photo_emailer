@@ -17,3 +17,7 @@ That made for slow development for a product I can't spend that much time on. So
 # First milestone
 The splitting of a project into milestones shouldn't just be based on the characteristics of the project itself; it should also take into account 
 the skills and knowledge of the developers. So, for me right now, a first milestone would just be to write a python script that sends an email on my behalf. 
+
+## Steps taken:
+- Set up virtual environment with Python 3.11.
+- Google "How to send emails on Google's behalf" or whatever. Get some advice using their REST API, getting client secrets and packages to install.
