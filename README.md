@@ -27,3 +27,13 @@ the skills and knowledge of the developers. So, for me right now, a first milest
 - Can I store the auth token so I don't have to go through those steps every time?
 - How to attach a file to it?
 - Using the testing concepts?
+
+# First test
+2023-08-21
+
+So. I have a very simple script that just authenticates with Google and sends a test email to myself. That's some sort of infrastructure, so I should put it into an infrastructure wrapper, and also provide something nullable.
+
+For now, I'll provide two methods, `authenticate` and `send_email`. Those go into the high-level class `EmailClient` which is 
+just a wrapper around the Google API methods used to authenticate and send email. Then, I also write a stubbed-out version of 
+that class which lets me turn off the "actually talking to Google" part while still having a class that behaves _like_ the 
+emailer.
