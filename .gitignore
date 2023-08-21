@@ -159,3 +159,4 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 client_secret_207719312154-if4ab3c5q7acd6rr0u7cc54b5muh678m.apps.googleusercontent.com.json
+credentials.json

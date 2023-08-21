@@ -21,3 +21,9 @@ the skills and knowledge of the developers. So, for me right now, a first milest
 ## Steps taken:
 - Set up virtual environment with Python 3.11.
 - Google "How to send emails on Google's behalf" or whatever. Get some advice using their REST API, getting client secrets and packages to install.
+- Install required packages and use the example script to send a simple test email ✅.
+
+## Next steps
+- Can I store the auth token so I don't have to go through those steps every time?
+- How to attach a file to it?
+- Using the testing concepts?
