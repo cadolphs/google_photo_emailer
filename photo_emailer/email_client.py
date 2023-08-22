@@ -5,49 +5,46 @@ import base64
 
 
 class EmailClient:
-    def __init__(self, mail_api, credentials):
-        self.api = mail_api(credentials)
+    def __init__(self, sender=None):
+        self.sender = sender
 
     @classmethod
-    def create(cls, credentials=None):
-        return cls(GmailSendClient, credentials)
+    def create(cls, creds):
+        sender = GmailSender(creds)
+        return cls(sender)
 
     @classmethod
-    def create_null(cls, credentials):
-        return cls(GmailSendStub, credentials)
+    def create_null(cls, creds):
+        sender = GmailSendStub(creds)
+        return cls(sender)
 
     def send_email(self, to, subject, body):
-        self.api.send_email(to, subject, body)
-
-
-class GmailSendClient:
-    def __init__(self, creds=None):
-        self.creds = creds
-
-    def send_email(self, to, subject, body):
-        service = build("gmail", "v1", credentials=self.creds)
         message = MIMEText(body)
         message["to"] = to
         message["subject"] = subject
         create_message = {"raw": base64.urlsafe_b64encode(message.as_bytes()).decode()}
 
+        self.sender.send_email(create_message)
+
+
+class GmailSender:
+    def __init__(self, creds=None):
+        self.creds = creds
+
+    def send_email(self, message):
         try:
-            message = (
-                service.users()
-                .messages()
-                .send(userId="me", body=create_message)
-                .execute()
+            service = build("gmail", "v1", credentials=self.creds)
+            result = (
+                service.users().messages().send(userId="me", body=message).execute()
             )
-            print(f"sent message to {message} Message Id: {message['id']}")
+            print(f"sent message to {result} Message Id: {result['id']}")
         except HTTPError as error:
             print(f"An error occurred: {error}")
-            message = None
 
 
 class GmailSendStub:
     def __init__(self, creds=None):
         self.messages = []
-        self.creds = creds
 
-    def send_email(self, to, subject, body):
-        self.messages.append({"to": to, "subject": subject, "body": body})
+    def send_email(self, message):
+        self.messages.append(message)

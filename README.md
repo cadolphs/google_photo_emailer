@@ -59,3 +59,7 @@ How have I followed the testing? Not so well. I think to completely follow that 
 But now what does that mean for the `GmailSendClient`? I don't want to duplicate my logic in the stub and the actual class. The 
 actual composing of the message is _application_ and _logic_. Only the sending of it is infrastructure. So next, we'll see if we can 
 stub that out.
+
+Great. Instead of an `EmailClient` with a complicated embedded stub, the `EmailClient` now has an injectable dependency on the 
+actual `sender`. The email client will compose the message and the sender will send it off; and because that is an infrastructure 
+dependency, it's nice to be able to turn that off.
