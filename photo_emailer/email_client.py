@@ -3,35 +3,65 @@ from googleapiclient.discovery import build
 from requests import HTTPError
 from email.mime.text import MIMEText
 import base64
+from google.oauth2.credentials import Credentials
 
 
 class EmailClient:
-    def __init__(self, mail_api=None):
-        self.api = mail_api()
+    def __init__(self, mail_api, credentials):
+        self.api = mail_api(credentials)
 
     @classmethod
-    def create(cls):
-        return cls(GmailAPI)
+    def create(cls, credentials=None):
+        return cls(GmailSendClient, credentials)
 
     @classmethod
-    def create_null(cls):
-        return cls(GmailStub)
-
-    def authenticate(self):
-        self.api.authenticate()
+    def create_null(cls, credentials):
+        return cls(GmailSendStub, credentials)
 
     def send_email(self, to, subject, body):
         self.api.send_email(to, subject, body)
 
 
-class GmailAPI:
-    def __init__(self):
-        self.creds = None
+class AuthClient:
+    def __init__(self, auth_api=None):
+        self.api = auth_api()
 
-    def authenticate(self):
+    @classmethod
+    def create(cls):
+        return cls(GoogleAuthAPI)
+
+    @classmethod
+    def create_null(cls):
+        return cls(AuthStub)
+
+    def get_credentials(self):
+        return self.api.get_credentials()
+
+
+class GoogleAuthAPI:
+    def get_credentials(self):
         SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
         flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
-        self.creds = flow.run_local_server(port=0)
+        return flow.run_local_server(port=0)
+
+
+class AuthStub:
+    def get_credentials(self):
+        creds = {
+            "token": "TOKEN",
+            "refresh_token": "REFRESH TOKEN",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "client_id": "CLIENTID",
+            "client_secret": "CLIENTSECRET",
+            "scopes": ["https://www.googleapis.com/auth/gmail.send"],
+            "expiry": "EXPIRY",
+        }
+        return creds
+
+
+class GmailSendClient:
+    def __init__(self, creds=None):
+        self.creds = creds
 
     def send_email(self, to, subject, body):
         service = build("gmail", "v1", credentials=self.creds)
@@ -53,10 +83,10 @@ class GmailAPI:
             message = None
 
 
-class GmailStub:
-    def authenticate(self):
-        pass
+class GmailSendStub:
+    def __init__(self, creds=None):
+        self.messages = []
+        self.creds = creds
 
     def send_email(self, to, subject, body):
-        self.last_message = {"to": to, "subject": subject, "body": body}
-        print(self.last_message)
+        self.messages.append({"to": to, "subject": subject, "body": body})

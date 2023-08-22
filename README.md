@@ -37,3 +37,11 @@ For now, I'll provide two methods, `authenticate` and `send_email`. Those go int
 just a wrapper around the Google API methods used to authenticate and send email. Then, I also write a stubbed-out version of 
 that class which lets me turn off the "actually talking to Google" part while still having a class that behaves _like_ the 
 emailer.
+
+One thing to note: We're not actually running any unittests yet. I think that is premature anyway. The code right now is just 
+passing on calls from one source to the other with no logic. I don't want to run tests on the actual Auth flow because that would 
+require steering the browser with Selenium or whatever and would just be super annoying.
+
+So let's see what I can do next: Reload stored credentials. How would I _test-drive_ such a feature? Right now I just have to _spike_ it because I'm unsure on what to do...
+
+Actually, it might be that my classes are too big!
