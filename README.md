@@ -42,6 +42,20 @@ One thing to note: We're not actually running any unittests yet. I think that is
 passing on calls from one source to the other with no logic. I don't want to run tests on the actual Auth flow because that would 
 require steering the browser with Selenium or whatever and would just be super annoying.
 
+# Reloading and refreshing credentials
+2023-08-22
+
 So let's see what I can do next: Reload stored credentials. How would I _test-drive_ such a feature? Right now I just have to _spike_ it because I'm unsure on what to do...
 
-Actually, it might be that my classes are too big!
+Actually, it might be that my classes are too big! Right now, `GmailAPI` is responsible for both the authentication and the 
+sending of email. We can split that up.
+
+So. Now we have one class for sending email and one for authenticating. That class should then handle storing and loading from 
+config, and it should really be the default behavior. And that didn't turn out so hard after all. The API handles the 
+storing, loading, and refreshing quite nicely.
+
+How have I followed the testing? Not so well. I think to completely follow that approach, I would have had to write even lower level wrappers. The `GoogleAuthAPI` class relies on some lower infrastructure, and that is what I would have had to stub out.
+
+But now what does that mean for the `GmailSendClient`? I don't want to duplicate my logic in the stub and the actual class. The 
+actual composing of the message is _application_ and _logic_. Only the sending of it is infrastructure. So next, we'll see if we can 
+stub that out.
