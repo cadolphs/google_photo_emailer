@@ -80,4 +80,7 @@ and code just enough to provide one real result. No need to make it robust or re
 
 In my case then I could use the stored credentials / refresh path. It's not robust or reliable because, if things are expired or don't work out, I'd have to do the browser flow. But it's _something_.
 
-So. We need to _test-drive_ the _Infrastructure Wrapper_ with _Narrow Integration Tests_. Let's go.
+So. We need to _test-drive_ the _Infrastructure Wrapper_ with _Narrow Integration Tests_.
+Now that this is done, we need to add a nullable version.
+
+If I wanted to be _super_ clear, then loading the credentials from a file should be its own class with its own nullable wrapper. That can have some nice benefits for my tests: For example, I _should_ test-drive the "check if token is expired, then use the refresh token" logic.

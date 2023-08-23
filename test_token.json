@@ -1,0 +1,11 @@
+{
+    "token": "TOKEN",
+    "refresh_token": "REFRESH_TOKEN",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "client_id": "CLIENT_ID",
+    "client_secret": "CLIENT_SECRET",
+    "scopes": [
+        "https://www.googleapis.com/auth/gmail.send"
+    ],
+    "expiry": "2022-08-23T21:04:01.984063Z"
+}
