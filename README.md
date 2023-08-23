@@ -73,3 +73,11 @@ The infrastructure here is the library call that opens the browser and the serve
 encapsulated in the python module.
 
 Let's go with the "grow evolutionary seeds" approach. The article (James Shore on Testing w/o Mocks) describes that this is the way to avoid the usual approach of outside-in testing that requires mocks.
+
+So. The first seed, hardcoding the infrastructure, would just be something that returns my credentials. Done that. Next, we need to 
+implement a barbones Infastructure Wrapper for the one infrastructure value we hardcoded. We test-drive it with narrow integration tests 
+and code just enough to provide one real result. No need to make it robust or reliable.
+
+In my case then I could use the stored credentials / refresh path. It's not robust or reliable because, if things are expired or don't work out, I'd have to do the browser flow. But it's _something_.
+
+So. We need to _test-drive_ the _Infrastructure Wrapper_ with _Narrow Integration Tests_. Let's go.
