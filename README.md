@@ -63,3 +63,13 @@ stub that out.
 Great. Instead of an `EmailClient` with a complicated embedded stub, the `EmailClient` now has an injectable dependency on the 
 actual `sender`. The email client will compose the message and the sender will send it off; and because that is an infrastructure 
 dependency, it's nice to be able to turn that off.
+
+# More testing
+2023-08-23
+Because this is about learning stuff, let's make this about getting the testing as close to the ideal as possible.
+
+So. Let's start with the first step. The LoginClient. The point of that is that it calls the google api to show a browser window.
+The infrastructure here is the library call that opens the browser and the server that listens to the response. Those are all 
+encapsulated in the python module.
+
+Let's go with the "grow evolutionary seeds" approach. The article (James Shore on Testing w/o Mocks) describes that this is the way to avoid the usual approach of outside-in testing that requires mocks.
