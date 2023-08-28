@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime, timezone
 
 
 @dataclass
@@ -26,11 +27,15 @@ class Credentials:
     @classmethod
     def from_dict(cls, data):
         return cls(
-            data.get("TOKEN"),
-            data.get("REFRESH_TOKEN"),
-            data.get("TOKEN_URI"),
-            data.get("CLIENT_ID"),
-            data.get("CLIENT_SECRET"),
-            data.get("SCOPES"),
-            data.get("EXPIRY"),
+            data.get("token"),
+            data.get("refresh_token"),
+            data.get("token_uri"),
+            data.get("client_id"),
+            data.get("client_secret"),
+            data.get("scopes"),
+            data.get("expiry"),
         )
+
+    def is_expired(self) -> bool:
+        # returns true if expiry is in the past
+        return datetime.fromisoformat(self.expiry) <= datetime.now(timezone.utc)

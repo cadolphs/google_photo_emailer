@@ -111,4 +111,11 @@ features around talking to the auth service.
 But actually, maybe I don't even want to accept the muddling of what should be a pure value class with that should be infrastructure. I can just code my own "pure" value object for the credentials, and then implement the refreshing in some other way. 
 Which, really, just means I'll want to refactor away from the dictionary credentials to an encapsulated credentials.
 
-Okay, so with that under way, I can use my own data class. I wonder if those things actually work with the google API. But we'll see. Next up would be the expiration and refresh logic.
+Okay, so with that under way, I can use my own data class. I wonder if those things actually work with the google API. But we'll see. Next up would be the expiration and refresh logic. 
+
+Quick reminder from James Shore's post: Logic classes aren't allowed to talk to infrastructure classes. They have to go through the Application layer.
+
+Before dealing with the refresh logic, I should then probably try to authenticate? Well, that doesn't work because the google api stuff expects the credentials to have an `authorize` method. So again, it's mixing 
+logic with infrastructure.
+
+I also already know that my token would need to be refreshed. So maybe let's do that logic first.
