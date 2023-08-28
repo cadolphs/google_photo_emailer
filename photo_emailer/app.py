@@ -10,5 +10,9 @@ class PhotoEmailer:
             self.credentials_loader = credentials_loader
 
     def run(self):
-        credentials_dict = self.credentials_loader.load_credentials()
-        return Credentials.from_dict(credentials_dict)
+        return DummyHttp()
+
+
+class DummyHttp:
+    def request(self):
+        pass

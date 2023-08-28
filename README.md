@@ -119,3 +119,8 @@ Before dealing with the refresh logic, I should then probably try to authenticat
 logic with infrastructure.
 
 I also already know that my token would need to be refreshed. So maybe let's do that logic first.
+
+One thing I can do is work with a login client and expect that the login client logs us in. That client should then wrap the interaction with Google's credentials.
+
+Hmmm. But really. There's the google third party API that should help me have a straightforward way with all this. But it's messy. I'll want to test-drive my way to a logged-in service. But not outside-in. Plus, I shouldn't be testing these libraries themselves, 
+so I shouldn't really have to bother with using my own http client in anything!

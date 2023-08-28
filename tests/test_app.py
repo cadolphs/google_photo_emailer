@@ -9,11 +9,10 @@ def test_app_loads_credentials_from_file():
     loader = CredentialsLoader.create_null(result={"token": "TESTTOKEN"})
     my_app = PhotoEmailer(credentials_loader=loader)
 
-    credentials = my_app.run()
+    authenticated_http_client = my_app.run()
 
-    expected_credentials = Credentials.from_dict({"token": "TESTTOKEN"})
-
-    assert expected_credentials == credentials
+    # assert that authenticated_http_client has a method called request
+    assert callable(getattr(authenticated_http_client, "request", None))
 
 
 def test_authentication_spike():
