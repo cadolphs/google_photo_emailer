@@ -84,3 +84,22 @@ So. We need to _test-drive_ the _Infrastructure Wrapper_ with _Narrow Integratio
 Now that this is done, we need to add a nullable version.
 
 If I wanted to be _super_ clear, then loading the credentials from a file should be its own class with its own nullable wrapper. That can have some nice benefits for my tests: For example, I _should_ test-drive the "check if token is expired, then use the refresh token" logic.
+
+Still left to do: Use the infrastructure wrapper in the app.
+
+# 2023-08-25
+Actually, let's start over because I was going too fast: There's so many infrastructures layered into all of this. To deal with the credentials, we need to load them from a file, then pass that into the 
+`Credentials` class which is _kind of_ an infrastructure class because it's part of the google API. 
+
+It's a class with an infrastructure dependence that I don't control. So to me that seems like I do want to wrap it, and then use delegates?
+
+Maybe the thread here is: First step, load credentials from a file and return a dictionary.
+
+# 2023-08-28
+Okay, so writing a credential's loader that really just opens a json file might seem overkill. Remember that rant "don't use classes so much". The benefit is in the ability to isolate the logic of loading credentials from a file from the actual file system 
+infrastructure, which makes the tests more easy to write. NOw with our nullable `CredentialsLoader` we can integrate it into the 
+test for the app.
+
+When writing the test for the actual app, we can already see benefits of this decoupling: We know that the loader reads files properly because of the focused integration test we wrote for it. So when writing tests for the app, we don't need to be testing that reading from files works properly. Instead, we use the nulled version, which _simulates_ the loading.
+
+Let's stop and think for a second if we're not doing a mistake similar to what happens when overusing mocks: That all we're testing is the test itself. Because we're still at the very simple app seed stage, let's not worry that the logic we're testing is too simple. But we are indeed using a real class... Let's see how that plays out once we have more complicated logic.
