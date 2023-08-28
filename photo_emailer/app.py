@@ -1,4 +1,5 @@
 from photo_emailer.infrastructure.credentials_loader import CredentialsLoader
+from photo_emailer.logic.credentials import Credentials
 
 
 class PhotoEmailer:
@@ -9,4 +10,5 @@ class PhotoEmailer:
             self.credentials_loader = credentials_loader
 
     def run(self):
-        return self.credentials_loader.load_credentials()
+        credentials_dict = self.credentials_loader.load_credentials()
+        return Credentials.from_dict(credentials_dict)

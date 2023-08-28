@@ -103,3 +103,12 @@ test for the app.
 When writing the test for the actual app, we can already see benefits of this decoupling: We know that the loader reads files properly because of the focused integration test we wrote for it. So when writing tests for the app, we don't need to be testing that reading from files works properly. Instead, we use the nulled version, which _simulates_ the loading.
 
 Let's stop and think for a second if we're not doing a mistake similar to what happens when overusing mocks: That all we're testing is the test itself. Because we're still at the very simple app seed stage, let's not worry that the logic we're testing is too simple. But we are indeed using a real class... Let's see how that plays out once we have more complicated logic.
+
+Our next desired behavior is that the dictionary credentials get loaded into a proper `Credentials` class. The question here is, 
+where do I test-drive that? Do I start with what I want to see in the app class? That would be another "outside in" approach. Instead, we'll test-drive a narrow infrastructure wrapper for the credentials class. We need that because that class has some 
+features around talking to the auth service.
+
+But actually, maybe I don't even want to accept the muddling of what should be a pure value class with that should be infrastructure. I can just code my own "pure" value object for the credentials, and then implement the refreshing in some other way. 
+Which, really, just means I'll want to refactor away from the dictionary credentials to an encapsulated credentials.
+
+Okay, so with that under way, I can use my own data class. I wonder if those things actually work with the google API. But we'll see. Next up would be the expiration and refresh logic.
