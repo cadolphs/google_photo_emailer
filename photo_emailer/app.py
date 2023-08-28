@@ -1,5 +1,6 @@
 from photo_emailer.infrastructure.credentials_loader import CredentialsLoader
 from photo_emailer.logic.credentials import Credentials
+from googleapiclient.discovery import build
 
 
 class PhotoEmailer:
@@ -10,9 +11,6 @@ class PhotoEmailer:
             self.credentials_loader = credentials_loader
 
     def run(self):
-        return DummyHttp()
+        creds = Credentials.from_dict(self.credentials_loader.load_credentials())
 
-
-class DummyHttp:
-    def request(self):
-        pass
+        return creds

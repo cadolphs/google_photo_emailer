@@ -124,3 +124,14 @@ One thing I can do is work with a login client and expect that the login client 
 
 Hmmm. But really. There's the google third party API that should help me have a straightforward way with all this. But it's messy. I'll want to test-drive my way to a logged-in service. But not outside-in. Plus, I shouldn't be testing these libraries themselves, 
 so I shouldn't really have to bother with using my own http client in anything!
+
+## More thoughts
+Okay, I'm overthinking and going slow, because I'm trying to follow the article exactly so that I can learn this technique. It's no surprise that it feels awkward at first.
+
+Maybe I should start with "legacy" code and then "descend" or "climb" the ladder to see where I can get to?
+
+One thing: This is a script that's supposed to run end-to-end, so really all these app tests are maybe a bit overkill? Or maybe not.
+
+Instead, I guess, the tests would go step after step of running the full thing.
+
+Right now, we read the credentials from a file. Next step: Build a mail service with these credentials.
