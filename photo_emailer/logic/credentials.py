@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 
 @dataclass
@@ -21,7 +21,7 @@ class Credentials:
             "TESTCLIENTID",
             "TESTCLIENTSECRET",
             ["TESTSCOPE"],
-            "TESTEXPIRY",
+            (datetime.now() + timedelta(days=1)).isoformat() + "Z",
         )
 
     @classmethod

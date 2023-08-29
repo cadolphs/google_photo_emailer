@@ -8,7 +8,6 @@ from google.oauth2.credentials import Credentials as GoogleCredentials
 
 def test_app_can_perform_login():
     creds = Credentials.get_test_instance()
-    creds.expiry = "2022-08-23T21:04:01.984063Z"
 
     loader = CredentialsLoader.create_null(
         result={
