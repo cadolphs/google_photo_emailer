@@ -157,3 +157,24 @@ email will be sent from Google, that's a third party infrastructure dependency t
 I don't want to build some service that would listen to the test email, right?
 
 Oh wait. Before moving on, I'll need to integrate the login stuff into the app.
+
+----
+
+Great. Now I'll want to write a super simple email client. The app will then use that email client.
+
+How to go about it? What sort of test would I add in the app? Again, don't go outside in. We _choose_ that we want the 
+app to send an email. We'll need an infrastructure wrapper for this, so let's go ahead with that.
+
+"But what about using TDD to decide the interface of the infrastructure wrapper?" 
+Meh, that would be outside-in testing again.
+
+So. There's the email sender and the email builder. Let's first create the infrastructure wrapper for the sender.
+
+----
+Thinking through the dependencies here. So. The LoginClient eventually spits out a _service_, which is what the 
+`EmailSender` depends on to actually send the email. 
+
+For parameterless instantiation and all that, this doesn't work! 
+
+What about providing it after the fact? Yeah. "Don't connect to external systems in the constructor". Of course _passing in_ the 
+created service wouldn't count as connecting in the constructor. But it's still something awkward.

@@ -6,7 +6,7 @@ from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials as GoogleCredentials
 
 
-def test_app_can_perform_login():
+def test_app_steps():
     creds = Credentials.get_test_instance()
 
     loader = CredentialsLoader.create_null(
