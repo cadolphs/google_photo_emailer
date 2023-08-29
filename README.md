@@ -135,3 +135,25 @@ One thing: This is a script that's supposed to run end-to-end, so really all the
 Instead, I guess, the tests would go step after step of running the full thing.
 
 Right now, we read the credentials from a file. Next step: Build a mail service with these credentials.
+
+# 2023-08-29
+Okay, maybe going "top down" at the start is easier when you're not that familiar yet with the overall process and outcomes. There are many patterns to learn about and use. A-Frame architecture, the infrastructure patterns, etc.
+
+So. I built a LoginClient that has dependencies on being able to build a credentials class and on being able to build a service.
+Maybe those should be instances instead of classes.
+
+----
+
+Great. So, for the refresh logic part I now have a `LoginClient` that's nullable. The thing it depends on is a class that turns my logic credentials into the GoogleCredentials, and we need that to be nullable, too. Similarly, now I'd need the service builder as a dependency. 
+
+Big progress. Added a nullable version of the google service builder, and added output tracking for that as well. Now the thing is 
+that, technically, I should do a focused integration test for these things, but I really don't want my tests to hit the google service all the time, _and_ I don't think setting up my own server and mocking around there makes sense. Instead, I can be 
+content that the overall logic seems to work and move on.
+
+----
+
+So, now that I can create a `LoginClient` and log in and build a service, I'll need to be able to send emails. Because the 
+email will be sent from Google, that's a third party infrastructure dependency that I don't want to deal with personally, and 
+I don't want to build some service that would listen to the test email, right?
+
+Oh wait. Before moving on, I'll need to integrate the login stuff into the app.
