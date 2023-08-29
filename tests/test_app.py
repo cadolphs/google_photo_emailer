@@ -1,5 +1,6 @@
 from photo_emailer.app import PhotoEmailer
 from photo_emailer.infrastructure.credentials_loader import CredentialsLoader
+from photo_emailer.infrastructure.email_sender import EmailSender
 from photo_emailer.infrastructure.login_client import LoginClient
 from photo_emailer.logic.credentials import Credentials
 from googleapiclient.discovery import build
@@ -19,14 +20,18 @@ def test_app_steps():
         }
     )
 
+    sender = EmailSender.create_null()
+    output_tracker = sender.track_output()
+
     my_app = PhotoEmailer(
-        credentials_loader=loader, login_client=LoginClient.create_null(None, "service")
+        credentials_loader=loader,
+        login_client=LoginClient.create_null(None),
+        email_sender=sender,
     )
 
     my_app.login()
-    client = my_app.login_client
+    my_app.send_email(subject="foo", message="bar")
 
-    assert isinstance(client, LoginClient)
-    assert client.credentials.token == creds.token
-    assert client.credentials.is_expired() is False
-    assert my_app.service is not None
+    data = output_tracker.data[0]
+
+    assert data["action"] == "send_email"

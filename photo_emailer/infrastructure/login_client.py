@@ -4,6 +4,7 @@ from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 from datetime import datetime, timedelta, timezone
 from photo_emailer.utils.events import OutputListener, OutputTracker
+from photo_emailer.infrastructure.email_sender import NullEmailService
 
 
 class LoginClient:
@@ -25,6 +26,9 @@ class LoginClient:
 
     @classmethod
     def create_null(cls, credentials, builder_response=None):
+        if builder_response is None:
+            builder_response = NullEmailService()
+
         credential_builder = GoogleCredentialBuilder.create_null()
         service_builder = ServiceBuilder.create_null(builder_response)
         return cls(credentials, credential_builder, service_builder)

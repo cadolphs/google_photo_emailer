@@ -177,4 +177,14 @@ Thinking through the dependencies here. So. The LoginClient eventually spits out
 For parameterless instantiation and all that, this doesn't work! 
 
 What about providing it after the fact? Yeah. "Don't connect to external systems in the constructor". Of course _passing in_ the 
-created service wouldn't count as connecting in the constructor. But it's still something awkward.
+created service wouldn't count as connecting in the constructor. But it's still something awkward. That's where the connect comes in.
+
+Anyway. That all seems to more or less work. The only problem now is that at some point I do have to test that google 
+actually likes that format.
+
+Now, trying that, we run into the issue that the token cannot be refreshed, so we need to run the browser authentication...
+
+Okay, feeling more comfortable with these thin wrappers. It seems like a lot of effort to wrap a single function call, but 
+it leads to a massive decoupling of our code from the underlying infrastructure.
+
+Next would be questions on how to _test_ these things.
