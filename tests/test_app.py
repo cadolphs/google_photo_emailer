@@ -35,6 +35,8 @@ def test_app_invokes_browser_flow_if_refresh_fails():
     creds.expiry = "2022-08-23T21:04:01.984063Z"
 
     loader = CredentialsIO.create_null(result=creds.to_dict())
+    loader_output = loader.track_output()
+
     refresher = CredentialsRefresher.create_test_instance_that_errors()
     browser_auth_client = BrowserAuthClient.create_null()
 
@@ -46,5 +48,5 @@ def test_app_invokes_browser_flow_if_refresh_fails():
 
     app.load_credentials()
     app.refresh_if_needed()
-
+    app.store_credentials()
     assert app.credentials.is_expired() is False

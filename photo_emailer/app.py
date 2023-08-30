@@ -47,3 +47,6 @@ class PhotoEmailer:
                 self.credentials = self.credentials_refresher.refresh(self.credentials)
         except RefreshError:
             self.credentials = self.browser_auth_client.run_browser_authentication()
+
+    def store_credentials(self):
+        self.credentials_loader.store_credentials(self.credentials.to_dict())

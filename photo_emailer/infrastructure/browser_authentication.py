@@ -22,7 +22,16 @@ class GoogleBrowserAuthService:
     def run_browser_authentication(self):
         SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
         flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
-        return flow.run_local_server(port=0)
+        g_creds = flow.run_local_server(port=0)
+        return Credentials(
+            token=g_creds.token,
+            refresh_token=g_creds.refresh_token,
+            token_uri=g_creds.token_uri,
+            client_id=g_creds.client_id,
+            client_secret=g_creds.client_secret,
+            scopes=g_creds.scopes,
+            expiry=g_creds.expiry.isoformat() + "Z",
+        )
 
 
 class NullBrowserAuthService:
