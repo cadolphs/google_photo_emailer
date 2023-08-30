@@ -212,3 +212,15 @@ step by step progress now. Next step, storing the credentials
 after getting new ones.
 
 # 2023-08-30
+Okay, got the credentials storing after refresh going! Now I can really think about emailing. Let's just start with sending 
+a simple test email. For that, I need an email-sender service. That's an infrastructure thing. I can pass the credentials in 
+as needed.
+
+Note: Commenting out `test_login_client.py` because I think we don't need that any more, but want to keep some code around for 
+_immediate_ reuse.
+
+Okay. Got the whole email sending working. I think my current setup, while not 100% pure, is quite okay: Use the nulled 
+infrastructure in the app tests and then test things manually in `simple_script.py`. Because the authentication flow 
+sometimes involves manual intervention (the browser flow), I really don't want to be running those in my automated tests.
+
+NEXT STEP: Attachments!

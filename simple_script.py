@@ -7,3 +7,5 @@ if __name__ == "__main__":
     app.load_credentials()
     app.refresh_if_needed()
     app.store_credentials()
+
+    app.send_email(sys.argv[1])

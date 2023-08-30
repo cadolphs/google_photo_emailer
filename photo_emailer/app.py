@@ -1,5 +1,5 @@
 from photo_emailer.infrastructure.credentials_io import CredentialsIO
-from photo_emailer.infrastructure.login_client import LoginClient
+
 from photo_emailer.logic.credentials import Credentials
 from googleapiclient.discovery import build
 from photo_emailer.infrastructure.email_sender import EmailSender
@@ -15,6 +15,7 @@ class PhotoEmailer:
         credentials_loader=None,
         credentials_refresher=None,
         browser_auth_client=None,
+        sender=None,
     ):
         self.credentials_loader = (
             credentials_loader
@@ -34,6 +35,8 @@ class PhotoEmailer:
             else BrowserAuthClient.create()
         )
 
+        self.sender = sender if sender is not None else EmailSender.create()
+
         self.credentials = None
 
     def load_credentials(self):
@@ -50,3 +53,14 @@ class PhotoEmailer:
 
     def store_credentials(self):
         self.credentials_loader.store_credentials(self.credentials.to_dict())
+
+    def send_email(self, to):
+        msg = self.prepare_email(to)
+        self.sender.send_email(msg, self.credentials)
+
+    def prepare_email(self, to):
+        msg = EmailMessage()
+        msg["Subject"] = ""
+        msg["To"] = to
+        msg.set_content("Hello World")
+        return msg
