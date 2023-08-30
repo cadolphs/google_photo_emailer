@@ -1,4 +1,4 @@
-from photo_emailer.infrastructure.credentials_loader import CredentialsIO
+from photo_emailer.infrastructure.credentials_io import CredentialsIO
 from photo_emailer.infrastructure.login_client import LoginClient
 from photo_emailer.logic.credentials import Credentials
 from googleapiclient.discovery import build

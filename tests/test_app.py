@@ -1,6 +1,6 @@
 from photo_emailer.app import PhotoEmailer
 from photo_emailer.logic.credentials import Credentials
-from photo_emailer.infrastructure.credentials_loader import CredentialsIO
+from photo_emailer.infrastructure.credentials_io import CredentialsIO
 from photo_emailer.infrastructure.credentials_refresher import CredentialsRefresher
 from photo_emailer.infrastructure.browser_authentication import BrowserAuthClient
 

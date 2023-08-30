@@ -1,4 +1,4 @@
-from photo_emailer.infrastructure.credentials_loader import CredentialsIO
+from photo_emailer.infrastructure.credentials_io import CredentialsIO
 from pathlib import Path
 
 
