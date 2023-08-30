@@ -1,9 +1,14 @@
 from photo_emailer.utils.datestuff import get_tomorrows_date_string
 from google.auth.exceptions import RefreshError
 from google.oauth2.credentials import Credentials as GoogleCredentials
+from google.auth.transport.requests import Request
 
 
 class CredentialsRefresher:
+    @classmethod
+    def create(cls):
+        return cls()
+
     @classmethod
     def create_null(cls):
         refresher = cls()

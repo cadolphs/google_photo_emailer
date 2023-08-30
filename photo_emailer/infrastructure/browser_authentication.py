@@ -4,7 +4,7 @@ from photo_emailer.logic.credentials import Credentials
 
 class BrowserAuthClient:
     def __init__(self, service):
-        self.service = None
+        self.service = service
 
     def run_browser_authentication(self):
         return self.service.run_browser_authentication()
@@ -29,6 +29,7 @@ class NullBrowserAuthService:
     def __init__(self, response=None):
         if response is None:
             response = Credentials.get_test_instance()
+        self.response = response
 
     def run_browser_authentication(self):
         return self.response

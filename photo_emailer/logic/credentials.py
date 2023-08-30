@@ -36,6 +36,17 @@ class Credentials:
             data.get("expiry"),
         )
 
+    def to_dict(self):
+        return {
+            "token": self.token,
+            "refresh_token": self.refresh_token,
+            "token_uri": self.token_uri,
+            "client_id": self.client_id,
+            "client_secret": self.client_secret,
+            "scopes": self.scopes,
+            "expiry": self.expiry,
+        }
+
     def is_expired(self) -> bool:
         # returns true if expiry is in the past
         return datetime.fromisoformat(self.expiry) <= datetime.now(timezone.utc)
