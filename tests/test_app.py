@@ -83,4 +83,25 @@ def test_app_can_send_email():
     msg = data["msg"]
     assert msg["Subject"] == ""
     assert msg["To"] == "test@test.com"
-    assert msg.get_content() == "Hello World\n"
+
+    expected = app.prepare_email("test@test.com")
+
+    content = None
+    expected_content = None
+    attachment = None
+    expected_attachment = None
+
+    for part in msg.walk():
+        if part.get_content_maintype() == "text":
+            content = part.get_content()
+        elif part.get_content_maintype() == "image":
+            attachment = part.get_content()
+
+    for part in expected.walk():
+        if part.get_content_maintype() == "text":
+            expected_content = part.get_content()
+        elif part.get_content_maintype() == "image":
+            expected_attachment = part.get_content()
+
+    assert content == expected_content
+    assert attachment == expected_attachment

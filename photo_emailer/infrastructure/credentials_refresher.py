@@ -2,6 +2,7 @@ from photo_emailer.utils.datestuff import get_tomorrows_date_string
 from google.auth.exceptions import RefreshError
 from google.oauth2.credentials import Credentials as GoogleCredentials
 from google.auth.transport.requests import Request
+from photo_emailer.logic.credentials import Credentials
 
 
 class CredentialsRefresher:
@@ -48,5 +49,5 @@ class CredentialsRefresher:
             client_id=g_creds.client_id,
             client_secret=g_creds.client_secret,
             scopes=g_creds.scopes,
-            expiry=g_creds.expiry,
+            expiry=g_creds.expiry.isoformat() + "Z",
         )

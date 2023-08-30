@@ -223,4 +223,18 @@ Okay. Got the whole email sending working. I think my current setup, while not 1
 infrastructure in the app tests and then test things manually in `simple_script.py`. Because the authentication flow 
 sometimes involves manual intervention (the browser flow), I really don't want to be running those in my automated tests.
 
-NEXT STEP: Attachments!
+NEXT STEP: Attachments! How to go about it? First step, hardcode an attachment.
+
+Let's use a simple png:
+
+cute cat by farra nugraha from [Noun Project](https://thenounproject.com/browse/icons/term/cute-cat/) (CC BY 3.0)
+
+Looks like I can now add attachments! Yay! Of course right now the file is hardcoded into the app test. So lets get rid of that and use proper functionality.
+
+What I want is to load _all_ the jpgs in a directory, group them into chunks of at most 25 MB and then create emails for those.
+
+That's a lot of steps at once. Let's go without chunking at first. The app would use an infrastructure class to grab all the 
+relevant files. That class would depend on glob and just reading files. The lowest level infrastructure class here is the 
+images loader. That's easy enough to make nullable. Note that I'm deviating from the "embedded stub" pattern for these very simple cases: I just do some on-the-fly patching of the one method we want to replace.
+
+Next would be a class that returns all the files in a directory.

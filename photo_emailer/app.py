@@ -63,4 +63,11 @@ class PhotoEmailer:
         msg["Subject"] = ""
         msg["To"] = to
         msg.set_content("Hello World")
+
+        with open("cat.png", "rb") as f:
+            file_data = f.read()
+
+        msg.add_attachment(file_data, maintype="image", subtype="png")
+        # This might be the right way to do, but it breaks the original simple
+        # email test because that one then can't get the "content".
         return msg
