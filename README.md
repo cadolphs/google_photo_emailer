@@ -187,4 +187,18 @@ Now, trying that, we run into the issue that the token cannot be refreshed, so w
 Okay, feeling more comfortable with these thin wrappers. It seems like a lot of effort to wrap a single function call, but 
 it leads to a massive decoupling of our code from the underlying infrastructure.
 
-Next would be questions on how to _test_ these things.
+Next would be questions on how to _test_ these things. If it's really just a thin wrapper, it doesn't need tests.
+
+----
+So. Where to put the browser logic? In the login client! Let's write some tests. But when does it happen? If the refresh fails.
+
+----
+Not so sure about the whole credentials stuff. I find it hard to inject the behavior of a failed server response.
+
+Maybe I'm putting too much logic into `LoginClient` when that should be the app. It also means the `LoginClient` needs complicated "factory" logic. How would it look like if it was just all in the app?
+
+Also, `LoginClient` doesn't have nicely visible behavior, with all that code stuff. There isnn't really a login process there anyway, there's just the job of procuring new credentials.
+
+Now, how can I refactor this to get rid of login client? By inlining the class?
+
+The real infrastructure wrappers usually don't have much logic in them.

@@ -1,37 +1,24 @@
 from photo_emailer.app import PhotoEmailer
-from photo_emailer.infrastructure.credentials_loader import CredentialsLoader
-from photo_emailer.infrastructure.email_sender import EmailSender
-from photo_emailer.infrastructure.login_client import LoginClient
 from photo_emailer.logic.credentials import Credentials
-from googleapiclient.discovery import build
-from google.oauth2.credentials import Credentials as GoogleCredentials
+from photo_emailer.infrastructure.credentials_loader import CredentialsLoader
 
 
-def test_app_steps():
+def test_app_loads_token_from_file():
     creds = Credentials.get_test_instance()
+    loader = CredentialsLoader.create_null(result=creds)
 
-    loader = CredentialsLoader.create_null(
-        result={
-            "token": creds.token,
-            "refresh_token": creds.refresh_token,
-            "token_uri": creds.token_uri,
-            "client_id": creds.client_id,
-            "expiry": creds.expiry,
-        }
-    )
+    app = PhotoEmailer(credentials_loader=loader)
+    loaded_creds = app.load_credentials()
 
-    sender = EmailSender.create_null()
-    output_tracker = sender.track_output()
+    assert creds == loaded_creds
 
-    my_app = PhotoEmailer(
-        credentials_loader=loader,
-        login_client=LoginClient.create_null(None),
-        email_sender=sender,
-    )
 
-    my_app.login()
-    my_app.send_email(subject="foo", message="bar")
+def test_app_can_refresh_credentials_if_expired():
+    creds = Credentials.get_test_instance()
+    creds.expiry = "2022-08-23T21:04:01.984063Z"
 
-    data = output_tracker.data[0]
+    loader = CredentialsLoader.create_null(result=creds)
 
-    assert data["action"] == "send_email"
+    app = PhotoEmailer(credentials_loader=loader)
+
+    # TODO here we need a credentials refresher

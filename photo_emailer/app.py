@@ -7,29 +7,12 @@ from email.message import EmailMessage
 
 
 class PhotoEmailer:
-    def __init__(self, credentials_loader=None, login_client=None, email_sender=None):
-        if credentials_loader is None:
-            self.credentials_loader = CredentialsLoader.create(filename="token.json")
-        else:
-            self.credentials_loader = credentials_loader
-        self.login_client = (
-            login_client if login_client else LoginClient.create(credentials=None)
+    def __init__(self, credentials_loader=None):
+        self.credentials_loader = (
+            credentials_loader
+            if credentials_loader is not None
+            else CredentialsLoader.create("token.json")
         )
 
-        self.email_sender = email_sender if email_sender else EmailSender.create()
-
-        self.service = None
-
-    def run(self):
-        return self.login()
-
-    def login(self):
-        creds = Credentials.from_dict(self.credentials_loader.load_credentials())
-        self.login_client.credentials = creds
-        self.service = self.login_client.login()
-
-    def send_email(self, subject: str, message: str):
-        msg = EmailMessage()
-        msg["Subject"] = subject
-        msg.set_content(message)
-        self.email_sender.send_email(msg)
+    def load_credentials(self):
+        return self.credentials_loader.load_credentials()

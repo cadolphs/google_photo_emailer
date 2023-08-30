@@ -5,6 +5,7 @@ from google.auth.transport.requests import Request
 from datetime import datetime, timedelta, timezone
 from photo_emailer.utils.events import OutputListener, OutputTracker
 from photo_emailer.infrastructure.email_sender import NullEmailService
+from google.auth.exceptions import RefreshError
 
 
 class LoginClient:
@@ -51,41 +52,6 @@ class LoginClient:
         return self._listener.create_tracker()
 
 
-class GoogleCredentialBuilder:
-    def __init__(self, google_credentials_factory=GoogleCredentials):
-        self.google_credentials_factory = google_credentials_factory
-
-    @classmethod
-    def create(cls):
-        return cls(GoogleCredentials)
-
-    @classmethod
-    def create_null(cls):
-        return cls(GoogleCredentialsStub)
-
-    def make_google_credentials(self, credentials: Credentials):
-        return self.google_credentials_factory(
-            token=credentials.token,
-            refresh_token=credentials.refresh_token,
-            token_uri=credentials.token_uri,
-            client_id=credentials.client_id,
-            client_secret=credentials.client_secret,
-            scopes=credentials.scopes,
-            expiry=credentials.expiry,
-        )
-
-    def make_logic_credentials(self, credentials):
-        return Credentials(
-            token=credentials.token,
-            refresh_token=credentials.refresh_token,
-            token_uri=credentials.token_uri,
-            client_id=credentials.client_id,
-            client_secret=credentials.client_secret,
-            scopes=credentials.scopes,
-            expiry=credentials.expiry,
-        )
-
-
 class GoogleCredentialsStub:
     def __init__(
         self,
@@ -110,6 +76,41 @@ class GoogleCredentialsStub:
 
     def is_expired(self):
         return datetime.fromisoformat(self.expiry) <= datetime.now(timezone.utc)
+
+
+class GoogleCredentialBuilder:
+    def __init__(self, google_credentials_factory=GoogleCredentials):
+        self.google_credentials_factory = google_credentials_factory
+
+    @classmethod
+    def create(cls):
+        return cls(GoogleCredentials)
+
+    @classmethod
+    def create_null(cls, factory=GoogleCredentialsStub):
+        return cls(factory)
+
+    def make_google_credentials(self, credentials: Credentials):
+        return self.google_credentials_factory(
+            token=credentials.token,
+            refresh_token=credentials.refresh_token,
+            token_uri=credentials.token_uri,
+            client_id=credentials.client_id,
+            client_secret=credentials.client_secret,
+            scopes=credentials.scopes,
+            expiry=credentials.expiry,
+        )
+
+    def make_logic_credentials(self, credentials):
+        return Credentials(
+            token=credentials.token,
+            refresh_token=credentials.refresh_token,
+            token_uri=credentials.token_uri,
+            client_id=credentials.client_id,
+            client_secret=credentials.client_secret,
+            scopes=credentials.scopes,
+            expiry=credentials.expiry,
+        )
 
 
 def get_tomorrows_date_string() -> str:
