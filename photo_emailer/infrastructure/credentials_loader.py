@@ -16,7 +16,7 @@ class CredentialsIO:
 
     @staticmethod
     def create_null(result):
-        return CredentialsLoaderStub(result)
+        return CredentialsIOStub(result)
 
     def load_credentials(self):
         with open(self.filename, "r") as f:
@@ -27,7 +27,7 @@ class CredentialsIO:
             json.dump(credentials, f)
 
 
-class CredentialsLoaderStub(CredentialsIO):
+class CredentialsIOStub(CredentialsIO):
     def __init__(self, result):
         super().__init__(None)
         self.result = result
