@@ -202,3 +202,11 @@ Also, `LoginClient` doesn't have nicely visible behavior, with all that code stu
 Now, how can I refactor this to get rid of login client? By inlining the class?
 
 The real infrastructure wrappers usually don't have much logic in them.
+
+----
+Okay, so let's try a new thing. From a different angle?
+
+----
+Liking the new auth flow a bit better! Should be making nice 
+step by step progress now. Next step, storing the credentials 
+after getting new ones.
