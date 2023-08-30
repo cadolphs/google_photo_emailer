@@ -1,4 +1,4 @@
-from photo_emailer.infrastructure.credentials_loader import CredentialsLoader
+from photo_emailer.infrastructure.credentials_loader import CredentialsIO
 from pathlib import Path
 
 
@@ -14,7 +14,7 @@ def test_credentials_loder_loads_json_from_file():
         "expiry": "2022-08-23T21:04:01.984063Z",
     }
 
-    loader = CredentialsLoader.create("test_token.json")
+    loader = CredentialsIO.create("test_token.json")
 
     result = loader.load_credentials()
 
@@ -32,7 +32,7 @@ def test_credentials_loader_can_store_json_to_file(tmp_path):
         "expiry": "2022-08-23T21:04:01.984063Z",
     }
 
-    loader = CredentialsLoader.create(str(tmp_path / "test_token.json"))
+    loader = CredentialsIO.create(str(tmp_path / "test_token.json"))
     loader.store_credentials(creds)
 
     assert Path.exists(tmp_path / "test_token.json")
@@ -43,7 +43,7 @@ def test_credentials_loader_can_store_json_to_file(tmp_path):
 
 
 def test_credentials_stub_writing():
-    loader = CredentialsLoader.create_null(None)
+    loader = CredentialsIO.create_null(None)
     output = loader.track_output()
 
     loader.store_credentials({"token": "FOO"})

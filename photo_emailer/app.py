@@ -1,4 +1,4 @@
-from photo_emailer.infrastructure.credentials_loader import CredentialsLoader
+from photo_emailer.infrastructure.credentials_loader import CredentialsIO
 from photo_emailer.infrastructure.login_client import LoginClient
 from photo_emailer.logic.credentials import Credentials
 from googleapiclient.discovery import build
@@ -19,7 +19,7 @@ class PhotoEmailer:
         self.credentials_loader = (
             credentials_loader
             if credentials_loader is not None
-            else CredentialsLoader.create("token.json")
+            else CredentialsIO.create("token.json")
         )
 
         self.credentials_refresher = (

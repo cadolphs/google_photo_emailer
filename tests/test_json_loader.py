@@ -1,4 +1,4 @@
-from photo_emailer.infrastructure.credentials_loader import CredentialsLoader
+from photo_emailer.infrastructure.credentials_loader import CredentialsIO
 
 
 def test_loader_loads_json_file_properly():
@@ -14,7 +14,7 @@ def test_loader_loads_json_file_properly():
         "expiry": "2022-08-23T21:04:01.984063Z",
     }
 
-    loader = CredentialsLoader.create(filename="test_token.json")
+    loader = CredentialsIO.create(filename="test_token.json")
     credentials = loader.load_credentials()
 
     assert expected_credentials == credentials

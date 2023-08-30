@@ -2,7 +2,7 @@ import json
 from photo_emailer.utils.events import OutputListener, OutputTracker
 
 
-class CredentialsLoader:
+class CredentialsIO:
     def __init__(self, filename):
         self.filename = filename
         self._listener = OutputListener()
@@ -27,7 +27,7 @@ class CredentialsLoader:
             json.dump(credentials, f)
 
 
-class CredentialsLoaderStub(CredentialsLoader):
+class CredentialsLoaderStub(CredentialsIO):
     def __init__(self, result):
         super().__init__(None)
         self.result = result
