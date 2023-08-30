@@ -1,9 +1,14 @@
 import json
+from photo_emailer.utils.events import OutputListener, OutputTracker
 
 
 class CredentialsLoader:
     def __init__(self, filename):
         self.filename = filename
+        self._listener = OutputListener()
+
+    def track_output(self):
+        return self._listener.create_tracker()
 
     @classmethod
     def create(cls, filename):
@@ -22,12 +27,15 @@ class CredentialsLoader:
             json.dump(credentials, f)
 
 
-class CredentialsLoaderStub:
+class CredentialsLoaderStub(CredentialsLoader):
     def __init__(self, result):
+        super().__init__(None)
         self.result = result
 
     def load_credentials(self):
         return self.result
 
     def store_credentials(self, credentials):
-        pass
+        self._listener.track(
+            data={"action": "store_credentials", "credentials": credentials}
+        )
