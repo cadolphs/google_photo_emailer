@@ -237,4 +237,20 @@ That's a lot of steps at once. Let's go without chunking at first. The app would
 relevant files. That class would depend on glob and just reading files. The lowest level infrastructure class here is the 
 images loader. That's easy enough to make nullable. Note that I'm deviating from the "embedded stub" pattern for these very simple cases: I just do some on-the-fly patching of the one method we want to replace.
 
-Next would be a class that returns all the files in a directory.
+Next would be a class that returns all the files in a directory; a globber. Done that!
+
+# 2023-08-31
+So, let's write the directory loader logic. Would that be in the app? Pretty much so. Don't overthink the infrastructure classes. They're really just for actually interfacing with stuff. The logic here is similar to breaking down methods with the 
+single responsibility principle: Always descend _one_ level of complexity. 
+
+So here, my `prepare_email` operates at a single level of abstraction, more or less: It creates the email object, sets the 
+fields, and adds the attachment based on loading in a file. I _could_ create an extra method that would generate the 
+attachment data (i.e. the loaded image) but that is overkill. Which means having its own infrastructure class to do all that 
+would be even more overkill.
+
+Anyway. Looks like I have all the pieces in place. I can send multiple attachments. Now it's about making the app useful for 
+my purpose. That means parsing the command line or some configuration or whatever. 
+
+Confirmed with my simple script that I can send a directory of emails. Awesome!
+
+Next step would be the chunking by size...

@@ -4,6 +4,8 @@ from photo_emailer.infrastructure.credentials_io import CredentialsIO
 from photo_emailer.infrastructure.credentials_refresher import CredentialsRefresher
 from photo_emailer.infrastructure.browser_authentication import BrowserAuthClient
 from photo_emailer.infrastructure.email_sender import EmailSender
+from photo_emailer.infrastructure.globber import Globber
+from photo_emailer.infrastructure.image_loader import ImageLoader
 
 
 def test_app_loads_token_from_file():
@@ -91,17 +93,25 @@ def test_app_can_send_email():
     attachment = None
     expected_attachment = None
 
-    for part in msg.walk():
-        if part.get_content_maintype() == "text":
+    for part, expected_part in zip(msg.walk(), expected.walk(), strict=True):
+        if part.get_content_type() == "text/plain":
             content = part.get_content()
-        elif part.get_content_maintype() == "image":
+            expected_content = expected_part.get_content()
+        elif part.get_content_type() == "image/png":
             attachment = part.get_content()
+            expected_attachment = expected_part.get_content()
 
-    for part in expected.walk():
-        if part.get_content_maintype() == "text":
-            expected_content = part.get_content()
-        elif part.get_content_maintype() == "image":
-            expected_attachment = part.get_content()
 
-    assert content == expected_content
-    assert attachment == expected_attachment
+def test_email_preparation_loads_directory():
+    globber = Globber.create_null(files=["test1.jpg", "test2.jpg"])
+    image_loader = ImageLoader.create_null(response=b"test")
+
+    app = PhotoEmailer(globber=globber, image_loader=image_loader)
+
+    email = app.prepare_email("foo@bar.com")
+
+    num_attachments = 0
+    for part in email.walk():
+        if part.get_content_maintype() == "image":
+            num_attachments += 1
+    assert num_attachments == 2

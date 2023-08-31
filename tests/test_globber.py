@@ -8,6 +8,8 @@ def directory_with_jpgs(tmp_path):
     jpg1.write_text("test1")
     jpg2 = tmp_path / "test2.jpg"
     jpg2.write_text("test2")
+    png = tmp_path / "distraction.png"
+    png.write_text("distraction")
     return tmp_path
 
 
@@ -25,5 +27,5 @@ def test_nulled_globber():
     globber = Globber.create_null(files=["test1.jpg", "test2.jpg"])
     files = globber.glob("test")
     assert len(files) == 2
-    assert "test1.jpg" in files
-    assert "test2.jpg" in files
+    assert "test/test1.jpg" in files
+    assert "test/test2.jpg" in files

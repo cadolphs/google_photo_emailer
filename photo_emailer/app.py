@@ -7,6 +7,8 @@ from photo_emailer.infrastructure.credentials_refresher import CredentialsRefres
 from photo_emailer.infrastructure.browser_authentication import BrowserAuthClient
 from email.message import EmailMessage
 from google.auth.exceptions import RefreshError
+from photo_emailer.infrastructure.image_loader import ImageLoader
+from photo_emailer.infrastructure.globber import Globber
 
 
 class PhotoEmailer:
@@ -16,6 +18,9 @@ class PhotoEmailer:
         credentials_refresher=None,
         browser_auth_client=None,
         sender=None,
+        image_loader=None,
+        globber=None,
+        image_directory="./",
     ):
         self.credentials_loader = (
             credentials_loader
@@ -36,6 +41,14 @@ class PhotoEmailer:
         )
 
         self.sender = sender if sender is not None else EmailSender.create()
+
+        self.image_loader = (
+            image_loader if image_loader is not None else ImageLoader.create()
+        )
+
+        self.globber = globber if globber is not None else Globber.create()
+
+        self.image_directory = image_directory
 
         self.credentials = None
 
@@ -64,10 +77,8 @@ class PhotoEmailer:
         msg["To"] = to
         msg.set_content("Hello World")
 
-        with open("cat.png", "rb") as f:
-            file_data = f.read()
+        for image_file in self.globber.glob(self.image_directory):
+            image = self.image_loader.load_image(image_file)
+            msg.add_attachment(image, maintype="image", subtype="jpg")
 
-        msg.add_attachment(file_data, maintype="image", subtype="png")
-        # This might be the right way to do, but it breaks the original simple
-        # email test because that one then can't get the "content".
         return msg

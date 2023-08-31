@@ -7,11 +7,11 @@ class Globber:
         return cls()
 
     @classmethod
-    def create_null(cls, files=None):
+    def create_null(cls, files=None, extensions=None):
         globber = cls()
 
         def null_glob(path):
-            return files
+            return [f"{path}/{file}" for file in files]
 
         globber.glob = null_glob
         return globber
