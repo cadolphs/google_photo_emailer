@@ -1,7 +1,6 @@
 from photo_emailer.infrastructure.credentials_io import CredentialsIO
 
 from photo_emailer.logic.credentials import Credentials
-from googleapiclient.discovery import build
 from photo_emailer.infrastructure.email_sender import EmailSender
 from photo_emailer.infrastructure.credentials_refresher import CredentialsRefresher
 from photo_emailer.infrastructure.browser_authentication import BrowserAuthClient
@@ -9,6 +8,7 @@ from email.message import EmailMessage
 from google.auth.exceptions import RefreshError
 from photo_emailer.infrastructure.image_loader import ImageLoader
 from photo_emailer.infrastructure.globber import Globber
+from photo_emailer.logic.chunker import chunk_files
 
 
 class PhotoEmailer:
@@ -21,6 +21,7 @@ class PhotoEmailer:
         image_loader=None,
         globber=None,
         image_directory="./",
+        max_email_size=25 * 1024 * 1024,
     ):
         self.credentials_loader = (
             credentials_loader
@@ -70,6 +71,27 @@ class PhotoEmailer:
     def send_email(self, to):
         msg = self.prepare_email(to)
         self.sender.send_email(msg, self.credentials)
+
+    def send_emails(self, to):
+        for msg in self.prepare_emails(to):
+            self.sender.send_email(msg, self.credentials)
+
+    def prepare_emails(self, to):
+        image_files = self.globber.glob(self.image_directory)
+        image_contents = [
+            self.image_loader.load_image(image_file) for image_file in image_files
+        ]
+        chunks = chunk_files(image_contents, 2000)
+
+        msgs = []
+        for chunk in chunks:
+            msg = EmailMessage()
+            msg["Subject"] = ""
+            msg["To"] = to
+            for image in chunk:
+                msg.add_attachment(image, maintype="image", subtype="jpg")
+            msgs.append(msg)
+        return msgs
 
     def prepare_email(self, to):
         msg = EmailMessage()

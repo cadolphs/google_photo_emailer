@@ -254,3 +254,16 @@ my purpose. That means parsing the command line or some configuration or whateve
 Confirmed with my simple script that I can send a directory of emails. Awesome!
 
 Next step would be the chunking by size...
+
+---
+The chunking is a purely logical operation that doesn't rely on IO, FS etc. Once we load the images into memory, it is 
+purely computational. So we can just write a pure function, which greatly simplifies unit tests. We don't bother with 
+fancy generator expressions etc because neither speed nor memory efficiency is of concern here.
+
+Now with those classes in place, I need to refactor and rejig a bit how send email works... it needs to send multiple 
+emails, one per prepared email.
+
+I want to refactor `send_email` into `send_emails` where it's multiple emails. How to do that? With the migration mechanics 
+of Martin Fowler's "Change Function Declaration" refactoring!
+
+But it's not really a refactoring, because it _is_ changing the behavior. So first, let's add a `send_emails` method.

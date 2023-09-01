@@ -115,3 +115,51 @@ def test_email_preparation_loads_directory():
         if part.get_content_maintype() == "image":
             num_attachments += 1
     assert num_attachments == 2
+
+
+def test_app_sends_multiple_emails_when_chunking():
+    creds = Credentials.get_test_instance()
+
+    loader = CredentialsIO.create_null(result=creds.to_dict())
+
+    refresher = CredentialsRefresher.create_null()
+    browser_auth_client = BrowserAuthClient.create_null()
+
+    sender = EmailSender.create_null()
+    sender_output = sender.track_output()
+
+    globber = Globber.create_null(files=["test1.jpg", "test2.jpg", "test3.jpg"])
+    image_loader = ImageLoader.create_null(response=bytes(1000))
+
+    app = PhotoEmailer(
+        credentials_loader=loader,
+        credentials_refresher=refresher,
+        browser_auth_client=browser_auth_client,
+        sender=sender,
+        globber=globber,
+        image_loader=image_loader,
+        max_email_size=2000,
+    )
+
+    app.load_credentials()
+    app.refresh_if_needed()
+    app.store_credentials()
+
+    app.send_emails(to="test@test.com")
+
+    # expecting two emails in the output
+    assert len(sender_output.data) == 2
+
+    # First mail should have two attachments, second should have one
+    msg_1 = sender_output.data[0]["msg"]
+    msg_2 = sender_output.data[1]["msg"]
+
+    num_attachments_1 = len(
+        [part for part in msg_1.walk() if part.get_content_maintype() == "image"]
+    )
+    num_attachments_2 = len(
+        [part for part in msg_2.walk() if part.get_content_maintype() == "image"]
+    )
+
+    assert num_attachments_1 == 2
+    assert num_attachments_2 == 1
