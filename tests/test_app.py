@@ -38,7 +38,6 @@ def test_app_invokes_browser_flow_if_refresh_fails():
     creds.expiry = "2022-08-23T21:04:01.984063Z"
 
     loader = CredentialsIO.create_null(result=creds.to_dict())
-    loader_output = loader.track_output()
 
     refresher = CredentialsRefresher.create_test_instance_that_errors()
     browser_auth_client = BrowserAuthClient.create_null()
@@ -59,7 +58,6 @@ def test_app_can_send_email():
     creds = Credentials.get_test_instance()
 
     loader = CredentialsIO.create_null(result=creds.to_dict())
-    loader_output = loader.track_output()
 
     refresher = CredentialsRefresher.create_null()
     browser_auth_client = BrowserAuthClient.create_null()
@@ -97,9 +95,11 @@ def test_app_can_send_email():
         if part.get_content_type() == "text/plain":
             content = part.get_content()
             expected_content = expected_part.get_content()
+            assert content == expected_content
         elif part.get_content_type() == "image/png":
             attachment = part.get_content()
             expected_attachment = expected_part.get_content()
+            assert attachment == expected_attachment
 
 
 def test_email_preparation_loads_directory():
