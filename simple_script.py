@@ -8,4 +8,4 @@ if __name__ == "__main__":
     app.refresh_if_needed()
     app.store_credentials()
 
-    app.send_email(sys.argv[1])
+    app.send_emails(sys.argv[1])

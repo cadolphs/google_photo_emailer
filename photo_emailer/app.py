@@ -51,6 +51,8 @@ class PhotoEmailer:
 
         self.image_directory = image_directory
 
+        self.max_email_size = max_email_size
+
         self.credentials = None
 
     def load_credentials(self):
@@ -81,7 +83,7 @@ class PhotoEmailer:
         image_contents = [
             self.image_loader.load_image(image_file) for image_file in image_files
         ]
-        chunks = chunk_files(image_contents, 2000)
+        chunks = chunk_files(image_contents, self.max_email_size)
 
         msgs = []
         for chunk in chunks:
