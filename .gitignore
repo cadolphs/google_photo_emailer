@@ -163,3 +163,4 @@ credentials.json
 stored_credentials.json
 token.json
 .DS_Store
+.python-version
