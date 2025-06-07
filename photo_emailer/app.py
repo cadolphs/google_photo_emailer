@@ -21,7 +21,7 @@ class PhotoEmailer:
         image_loader=None,
         globber=None,
         image_directory="./",
-        max_email_size=25 * 1024 * 1024,
+        max_email_size=8 * 1024 * 1024,
     ):
         self.credentials_loader = (
             credentials_loader
@@ -78,6 +78,13 @@ class PhotoEmailer:
         for msg in self.prepare_emails(to):
             self.sender.send_email(msg, self.credentials)
 
+    def send_test_email(self, to):
+        msg = EmailMessage()
+        msg.set_content("Hi mom!")
+        msg["Subject"] = "Test"
+        msg["To"] = to
+        self.sender.send_email(msg, self.credentials)
+
     def prepare_emails(self, to):
         image_files = self.globber.glob(self.image_directory)
         image_contents = [
@@ -88,17 +95,18 @@ class PhotoEmailer:
         msgs = []
         for chunk in chunks:
             msg = EmailMessage()
-            msg["Subject"] = ""
+            msg["Subject"] = "Photos"
             msg["To"] = to
-            for image in chunk:
-                msg.add_attachment(image, maintype="image", subtype="jpg")
+            msg["From"] = "clemens.adolphs@gmail.com"
+            for idx, image in enumerate(chunk):
+                msg.add_attachment(image, maintype="image", subtype="jpeg", filename=f"photo_{idx+1}.jpg")
             msgs.append(msg)
         return msgs
 
     def prepare_email(self, to):
         msg = EmailMessage()
-        msg["Subject"] = ""
-        msg["To"] = to
+        msg["subject"] = ""
+        msg["to"] = to
         msg.set_content("Hello World")
 
         for image_file in self.globber.glob(self.image_directory):

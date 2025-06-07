@@ -39,11 +39,16 @@ class GoogleEmailService:
         )
         try:
             service = build("gmail", "v1", credentials=g_creds)
-            msg = {"raw": base64.urlsafe_b64encode(msg.as_bytes()).decode()}
-            result = service.users().messages().send(userId="me", body=msg).execute()
+            print(f"Sending email to {msg['To']}")
+            msg_enc = {"raw": base64.urlsafe_b64encode(msg.as_bytes()).decode()}
+            result = service.users().messages().send(userId="me", body=msg_enc).execute()
             print(f"sent message to {result} Message Id: {result['id']}")
         except HTTPError as error:
             print(f"An error occurred: {error}")
+            raise error
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+            raise e
 
 
 class NullEmailService:
