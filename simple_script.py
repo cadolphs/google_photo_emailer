@@ -21,10 +21,18 @@ def send_photos(
 def chunk_files(
     source_directory: str = typer.Argument(..., help="Directory containing files to organize"),
     output_directory: str = typer.Argument(..., help="Directory where organized sub-folders will be created"),
-    max_size_mb: int = typer.Option(25, "--max-size", "-s", help="Maximum size per sub-folder in MB")
+    max_size_mb: int = typer.Option(25, "--max-size", "-s", help="Maximum size per sub-folder in MB"),
+    resize_dimension: int = typer.Option(None, "--resize", "-r", help="Resize images to max dimension (e.g., 2000 for 2000px max)"),
+    quality: int = typer.Option(85, "--quality", "-q", help="JPEG quality for resized images (1-100)")
 ):
     """Organize files from source directory into sub-folders with a maximum total size per folder."""
-    organize_files_into_folders(source_directory, output_directory, max_size_mb)
+    organize_files_into_folders(
+        source_directory,
+        output_directory,
+        max_size_mb,
+        resize_max_dimension=resize_dimension,
+        resize_quality=quality
+    )
 
 if __name__ == "__main__":
     app()
