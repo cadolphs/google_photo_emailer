@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageOps
 import io
 from photo_emailer.utils.events import OutputListener
 from photo_emailer.infrastructure.image_loader import ImageLoader
@@ -60,6 +60,8 @@ class ImageProcessor:
             Tuple of (width, height) in pixels
         """
         with Image.open(io.BytesIO(image_bytes)) as img:
+            # Apply EXIF orientation to get correct dimensions
+            img = ImageOps.exif_transpose(img)
             return img.size
 
     def resize_image_bytes(self, image_bytes, new_width, new_height, quality=85):
@@ -77,6 +79,9 @@ class ImageProcessor:
             Resized image as bytes
         """
         with Image.open(io.BytesIO(image_bytes)) as img:
+            # Apply EXIF orientation first to ensure correct rotation
+            img = ImageOps.exif_transpose(img)
+
             # Convert RGBA/P to RGB for JPEG compatibility
             if img.mode in ('RGBA', 'LA', 'P'):
                 background = Image.new('RGB', img.size, (255, 255, 255))
@@ -138,7 +143,7 @@ class ImageProcessor:
 
     def copy_without_resize(self, source_path, destination_path):
         """
-        Copy an image file without resizing.
+        Copy an image file without resizing, but apply EXIF orientation.
 
         Args:
             source_path: Path to source image file
@@ -150,8 +155,31 @@ class ImageProcessor:
         # Load using image_loader dependency
         image_bytes = self._image_loader.load_image(source_path)
 
+        # Apply EXIF orientation even when not resizing
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            img = ImageOps.exif_transpose(img)
+
+            # Convert to RGB if needed for JPEG compatibility
+            if img.mode not in ('RGB', 'L'):
+                if img.mode in ('RGBA', 'LA', 'P'):
+                    background = Image.new('RGB', img.size, (255, 255, 255))
+                    if img.mode == 'P':
+                        img = img.convert('RGBA')
+                    if img.mode in ('RGBA', 'LA'):
+                        background.paste(img, mask=img.split()[-1])
+                    else:
+                        background.paste(img)
+                    img = background
+                else:
+                    img = img.convert('RGB')
+
+            # Save to bytes
+            buffer = io.BytesIO()
+            img.save(buffer, format='JPEG', quality=95, optimize=True)
+            output_bytes = buffer.getvalue()
+
         # Save using file_saver dependency
-        bytes_written = self._file_saver.save_bytes(image_bytes, destination_path)
+        bytes_written = self._file_saver.save_bytes(output_bytes, destination_path)
 
         self._listener.track(data={
             "action": "copy_without_resize",
